@@ -1,0 +1,86 @@
+---
+- name: Dealbot Deployment
+  hosts: all
+  become: yes
+  become_user: root
+  tasks:
+    - name: update apt
+      apt:
+        upgrade: dist
+        update_cache: true
+
+    - name: install git
+      apt:
+        name: git
+        state: latest
+
+    - name: install python
+      apt:
+        name: python
+        state: latest
+        update_cache: true
+        install_recommends: yes
+
+    - name: install pip
+      apt:
+        name: python-pip
+        state: latest
+
+    - name: install docker pre-requisites
+      apt:
+        pkg:
+          - ca-certificates
+          - curl
+          - gnupg
+        state: present
+
+    - name: install docker GPG key
+      shell: |
+        sudo install -m 0755 -d /etc/apt/keyrings
+        curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+        sudo chmod a+r /etc/apt/keyrings/docker.gpg
+
+    - name: set-up docker repository
+      shell: |
+        echo \
+        "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+        "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" | \
+        sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+    - name: update apt
+      apt:
+        update_cache: true
+
+    - name: install docker
+      apt:
+        name: docker-ce
+        state: latest
+        install_recommends: yes
+
+    - name: set-up directories
+      file:
+        path: /app
+        state: directory
+
+    - name: clone dealbot
+      git:
+        repo: https://github.com/Ax-Projects/DealBot
+        dest: /app
+
+    - name: install depenencies
+      pip:
+        requirements: /app/DealBot/requirements.txt
+
+    - name: copy telegram token
+      file:
+        src: keys.py
+        path: /app/DealBot/keys.py
+        state: present
+        mode: 0444
+
+    - name: run selenium headless container
+      shell: |
+        docker run -d -p 4444:4444 -p 7900:7900 --shm-size="1g" selenium/standalone-chrome:latest
+
+    - name: run Dealbot
+      command: python3 /app/DealBot/main.py
