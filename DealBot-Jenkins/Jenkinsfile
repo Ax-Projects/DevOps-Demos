@@ -12,13 +12,11 @@ pipeline {
     timestamps()
   }
   environment {
-    registry = 'amsiman/devopsproject'
-    DOCKER_CERT_PATH = credentials('docker-token') // Make sure to have DockerHub credentials available in the Jenkins Server Credentials Manager
-    DOCKER_CREDS = credentials('docker-token')
-    dockerImage = ''
+    SECRET_FILE = credentials('terraform-secrets')
+    TF_IN_AUTOMATION = 'true'
   }
   stages {
-    stage('pull repo') {
+    stage('clone repo') {
       steps {
         git branch: 'main', url: 'https://github.com/Ax-Projects/DealBot'
       }
@@ -29,11 +27,19 @@ pipeline {
       }
     }
     stage('copy secrets') {
+      steps{
+        sh 'cp $SECRET_FILE ./secret.tfvars'
+      }
+      // steps {
+      //   script {
+      //       echo "$PWD";
+      //       fileOperations([[$class 'CopyOperation', from: '~/secrets/secret.tfvars', into: './secret.tfvars']])
+      //   }
+      // }
+    }
+    stage('terraform plan') {
       steps {
-        script {
-            echo "$PWD";
-            fileOperations([[$class 'CopyOperation', from: '~/secrets/secret.tfvars', into: './secret.tfvars']])
-        }
+        sh(script: "terraform plan -var-file=secret.tfvars", returnStdout: true, returnStatus: true)
       }
     }
   }
