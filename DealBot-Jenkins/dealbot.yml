@@ -82,15 +82,15 @@
       shell: |
         docker run -d -p 4444:4444 -p 7900:7900 --shm-size="1g" selenium/standalone-chrome:latest
 
-    - name: create logs directory
-      file:
-        path: /app/logs
-        state: directory
+    # - name: create logs directory
+    #   file:
+    #     path: /app/logs
+    #     state: directory
 
-    - name: create data directory
-      file:
-        path: /app/data_lists
-        state: directory
+    # - name: create data directory
+    #   file:
+    #     path: /app/data_lists
+    #     state: directory
 
     - name: run Dealbot
-      command: python3 /app/main.py
+      command: cd /app && python3 main.py
