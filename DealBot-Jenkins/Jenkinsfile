@@ -22,15 +22,10 @@ pipeline {
         // git branch: 'main', url: 'https://github.com/Ax-Projects/DealBot'
       }
     }
-    stage('init terraform') {
-      steps {
-        sh(script: "cd DealBot-Jenkins && terraform init", returnStdout: true, returnStatus: true)
-      }
-    }
     stage('copy secrets') {
       steps{
         sh 'echo $PWD'
-        sh 'cp $SECRET_FILE ./DealBot-Jenkins/secret.tfvars'
+        sh 'cp $SECRET_FILE DealBot-Jenkins'
       }
       // steps {
       //   script {
@@ -38,6 +33,11 @@ pipeline {
       //       fileOperations([[$class 'CopyOperation', from: '~/secrets/secret.tfvars', into: './secret.tfvars']])
       //   }
       // }
+    }
+    stage('init terraform') {
+      steps {
+        sh(script: "cd DealBot-Jenkins && terraform init", returnStdout: true, returnStatus: true)
+      }
     }
     stage('terraform plan') {
       steps {
