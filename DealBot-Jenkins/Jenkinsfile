@@ -1,0 +1,40 @@
+pipeline {
+  agent {
+    node {
+      label 'local'
+    }
+  }
+  triggers {
+    pollSCM 'H/30 * * * *'
+  }
+  options{
+    buildDiscarder(logRotator(numToKeepStr: '5', daysToKeepStr: '5'))
+    timestamps()
+  }
+  environment {
+    registry = 'amsiman/devopsproject'
+    DOCKER_CERT_PATH = credentials('docker-token') // Make sure to have DockerHub credentials available in the Jenkins Server Credentials Manager
+    DOCKER_CREDS = credentials('docker-token')
+    dockerImage = ''
+  }
+  stages {
+    stage('pull repo') {
+      steps {
+        git branch: 'main', url: 'https://github.com/Ax-Projects/DealBot'
+      }
+    }
+    stage('init terraform') {
+      steps {
+        sh(script: "terraform init", returnStdout: true, returnStatus: true)
+      }
+    }
+    stage('copy secrets') {
+      steps {
+        script {
+            echo "$PWD";
+            fileOperations([[$class 'CopyOperation', from: '~/secrets/secret.tfvars', into: './secret.tfvars']])
+        }
+      }
+    }
+  }
+}
