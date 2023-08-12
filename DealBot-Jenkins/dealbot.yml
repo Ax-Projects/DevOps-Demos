@@ -21,11 +21,6 @@
         update_cache: true
         install_recommends: yes
 
-    - name: install pip
-      apt:
-        name: python-pip
-        state: latest
-
     - name: install docker pre-requisites
       apt:
         pkg:
