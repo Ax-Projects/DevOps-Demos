@@ -69,12 +69,12 @@
 
     - name: install depenencies
       pip:
-        requirements: /app/DealBot/requirements.txt
+        requirements: /app/requirements.txt
 
     - name: copy telegram token
       file:
         src: keys.py
-        path: /app/DealBot/keys.py
+        path: /app/keys.py
         state: present
         mode: 0444
 
@@ -83,4 +83,4 @@
         docker run -d -p 4444:4444 -p 7900:7900 --shm-size="1g" selenium/standalone-chrome:latest
 
     - name: run Dealbot
-      command: python3 /app/DealBot/main.py
+      command: python3 /app/main.py
