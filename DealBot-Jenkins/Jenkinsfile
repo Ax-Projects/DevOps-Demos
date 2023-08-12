@@ -49,11 +49,11 @@ pipeline {
       }
     }
   }
-  post {
-    failure {
-      script {
-        deleteDir()
-      }
-    }
-  }
+  // post {
+  //   failure {
+  //     script {
+  //       deleteDir()
+  //     }
+  //   }
+  // }
 }
