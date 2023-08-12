@@ -17,7 +17,6 @@ pipeline {
     stage('clone repo') {
       steps {
         git branch: 'main', url: 'https://github.com/Ax-Projects/DevOps-Demos'
-        // git branch: 'main', url: 'https://github.com/Ax-Projects/DealBot'
       }
     }
     stage('copy secrets') {
@@ -43,17 +42,17 @@ pipeline {
         sh(script: "cd DealBot-Jenkins && terraform apply -input=false -auto-approve tfplan")
       }
     }
-    stage('terraform destroy') {
-      steps {
-        sh(script: "cd DealBot-Jenkins && terraform destroy -input=false -auto-approve -var-file=secret.tfvars")
+  }
+  post {
+    failure {
+      stage('terraform destroy') {
+        steps {
+          sh(script: "cd DealBot-Jenkins && terraform destroy -input=false -auto-approve -var-file=secret.tfvars")
+        }
+      }
+      cleanup {
+        deleteDir()
       }
     }
   }
-  // post {
-  //   failure {
-  //     script {
-  //       deleteDir()
-  //     }
-  //   }
-  // }
 }
