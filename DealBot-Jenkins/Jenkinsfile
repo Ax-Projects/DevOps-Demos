@@ -24,8 +24,8 @@ pipeline {
     }
     stage('copy secrets') {
       steps{
-        sh 'echo $PWD'
         sh 'cp $SECRET_FILE DealBot-Jenkins'
+        sh 'chmod +r DealBot-Jenkins/secret.tfvars'
       }
       // steps {
       //   script {
@@ -36,12 +36,12 @@ pipeline {
     }
     stage('init terraform') {
       steps {
-        sh(script: "cd DealBot-Jenkins && terraform init", returnStdout: true, returnStatus: true)
+        sh(script: "cd DealBot-Jenkins && terraform init")
       }
     }
     stage('terraform plan') {
       steps {
-        sh(script: "cd DealBot-Jenkins && terraform plan -var-file=secret.tfvars", returnStdout: true, returnStatus: true)
+        sh(script: "cd DealBot-Jenkins && terraform plan -var-file=secret.tfvars")
       }
     }
   }
