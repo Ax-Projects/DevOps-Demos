@@ -37,10 +37,11 @@ resource "linode_instance" "terraform-example" {
 }
 
 resource "local_file" "ansible_vars" {
-  content  = <<-EOT
+  content         = <<-EOT
     ssh_username: "${var.ssh_username}"
     ssh_private_key: "${var.ssh_private_key}"
     instance_ip: "${linode_instance.terraform-example.ip_address}"
   EOT
-  filename = "ansible_vars.yml"
+  filename        = "ansible_vars.yml"
+  file_permission = "0644"
 }

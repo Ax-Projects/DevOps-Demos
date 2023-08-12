@@ -1,8 +1,6 @@
 ---
 - name: Dealbot Deployment
   hosts: all
-  # var-files:
-  #   - ansible_vars.yml
   become: yes
   become_user: root
   tasks:
@@ -75,10 +73,9 @@
         extra_args: "--no-cache-dir"
 
     - name: copy telegram token
-      file:
-        src: keys.py
-        path: /app/keys.py
-        state: file
+      copy:
+        src: /var/lib/jenkins/workspace/DealBot-Terraform-Demo/DealBot-Jenkins/keys.py
+        dest: /app/keys.py
         mode: 0444
 
     - name: run selenium headless container
