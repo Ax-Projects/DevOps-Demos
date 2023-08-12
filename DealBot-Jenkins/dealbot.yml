@@ -72,7 +72,7 @@
     - name: install depenencies
       pip:
         requirements: /app/requirements.txt
-        extra-args: "--no-cache-dir"
+        extra_args: "--no-cache-dir"
 
     - name: copy telegram token
       file:
