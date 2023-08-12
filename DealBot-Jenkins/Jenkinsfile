@@ -13,6 +13,7 @@ pipeline {
   }
   environment {
     SECRET_FILE = credentials('terraform-secrets')
+    TELEGRAM_TOKEN = credentials('telegram-token')
     TF_IN_AUTOMATION = 'true'
   }
   stages {
@@ -25,14 +26,10 @@ pipeline {
     stage('copy secrets') {
       steps{
         sh 'cp $SECRET_FILE DealBot-Jenkins'
+        sh 'cp $TELEGRAM_TOKEN DealBot-Jenkins'
         sh 'chmod +r DealBot-Jenkins/secret.tfvars'
+        sh 'chmod +r DealBot-Jenkins/keys.py'
       }
-      // steps {
-      //   script {
-      //       echo "$PWD";
-      //       fileOperations([[$class 'CopyOperation', from: '~/secrets/secret.tfvars', into: './secret.tfvars']])
-      //   }
-      // }
     }
     stage('init terraform') {
       steps {
@@ -44,5 +41,16 @@ pipeline {
         sh(script: "cd DealBot-Jenkins && terraform plan -var-file=secret.tfvars")
       }
     }
+    stage('terraform apply') {
+      steps {
+        sh(script: "cd DealBot-Jenkins && terraform apply -var-file=secret.tfvars")
+      }
+    }
+    stage('terraform destroy') {
+      steps {
+        sh(script: "cd DealBot-Jenkins && terraform destroy -var-file=secret.tfvars")
+      }
+    }
+
   }
 }
