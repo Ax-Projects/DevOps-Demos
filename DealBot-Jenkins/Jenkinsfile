@@ -35,17 +35,17 @@ pipeline {
     }
     stage('terraform plan') {
       steps {
-        sh(script: "cd DealBot-Jenkins && terraform plan -var-file=secret.tfvars")
+        sh(script: "cd DealBot-Jenkins && terraform plan -var-file=secret.tfvars -out=tfplan")
       }
     }
     stage('terraform apply') {
       steps {
-        sh(script: "cd DealBot-Jenkins && terraform apply -var-file=secret.tfvars")
+        sh(script: "cd DealBot-Jenkins && terraform apply -input=false -auto-approve tfplan")
       }
     }
     stage('terraform destroy') {
       steps {
-        sh(script: "cd DealBot-Jenkins && terraform destroy -var-file=secret.tfvars")
+        sh(script: "cd DealBot-Jenkins && terraform destroy -input=false -auto-approve")
       }
     }
 
