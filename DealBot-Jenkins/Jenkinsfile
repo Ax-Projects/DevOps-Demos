@@ -18,7 +18,8 @@ pipeline {
   stages {
     stage('clone repo') {
       steps {
-        git branch: 'main', url: 'https://github.com/Ax-Projects/DealBot'
+        git branch: 'main', url: 'https://github.com/Ax-Projects/DevOps-Demos'
+        // git branch: 'main', url: 'https://github.com/Ax-Projects/DealBot'
       }
     }
     stage('init terraform') {
