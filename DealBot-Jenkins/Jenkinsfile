@@ -48,6 +48,12 @@ pipeline {
         sh(script: "cd DealBot-Jenkins && terraform destroy -input=false -auto-approve")
       }
     }
-
+  }
+  post {
+    failure {
+      script {
+        deleteDir()
+      }
+    }
   }
 }
