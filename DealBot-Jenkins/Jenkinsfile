@@ -42,17 +42,17 @@ pipeline {
         sh(script: "cd DealBot-Jenkins && terraform apply -input=false -auto-approve tfplan")
       }
     }
-  }
-  post {
-    failure {
-      stage('terraform destroy') {
-        steps {
-          sh(script: "cd DealBot-Jenkins && terraform destroy -input=false -auto-approve -var-file=secret.tfvars")
-        }
-      }
-      cleanup {
-        deleteDir()
+    stage('terraform destroy') {
+      steps {
+        sh(script: "cd DealBot-Jenkins && terraform destroy -input=false -auto-approve -var-file=secret.tfvars")
       }
     }
   }
+  // post {
+  //   failure {
+  //     cleanup {
+  //       deleteDir()
+  //     }
+  //   }
+  // }
 }
