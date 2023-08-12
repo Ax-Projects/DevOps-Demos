@@ -35,3 +35,12 @@ resource "linode_instance" "terraform-example" {
     command = "ansible-playbook -u ${var.ssh_username} -i '${self.ip_address},' -e 'ansible_python_interpreter=/usr/bin/python3' --private-key ${var.ssh_private_key} dealbot.yml"
   }
 }
+
+resource "local_file" "ansible_vars" {
+  content  = <<-EOT
+    ssh_username: "${var.ssh_username}"
+    ssh_private_key: "${var.ssh_private_key}"
+    instance_ip: "${linode_instance.terraform-example.ip_address}"
+  EOT
+  filename = "ansible_vars.yml"
+}
