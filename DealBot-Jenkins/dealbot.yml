@@ -93,4 +93,6 @@
     #     state: directory
 
     - name: run Dealbot
-      command: cd /app && python3 main.py
+      shell: |
+        cd /app
+        python3 main.py
