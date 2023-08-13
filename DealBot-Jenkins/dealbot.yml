@@ -88,8 +88,8 @@
         delay: 2
         command: curl http://localhost:4444/wd/hub/status
         search_regex: "Selenium Grid ready."
-      register: selenium-status
-      until: selenium-status.stdout | from_json | json_query('value.ready') == true
+      register: result
+      until: result.stdout | from_json | json_query('value.ready') == true
 
     - name: run Dealbot
       shell: |
