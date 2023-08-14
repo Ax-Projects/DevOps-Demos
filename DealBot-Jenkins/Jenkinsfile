@@ -44,9 +44,10 @@ pipeline {
     }
     stage('Ansible Provisioning') {
       steps{
-        sh 'ansible-playbook DealBot-Jenkins/deploy.yml'
+        sh 'cd DealBot-Jenkins && ansible-playbook -i inventory.ini dealbot.yml'
       }
     }
+    
     stage('terraform destroy') {
       steps {
         sh(script: "cd DealBot-Jenkins && terraform destroy -input=false -auto-approve -var-file=secret.tfvars")
