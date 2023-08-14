@@ -85,13 +85,11 @@
         docker run -d -p 4444:4444 -p 7900:7900 --shm-size="1g" selenium/standalone-chrome:latest
 
     - name: waiting for selenium to return ready status
-      wait_for:
-        timeout: 120
-        delay: 2
-        attempts: 20
-        command: curl http://localhost:4444/wd/hub/status
+      command: curl http://localhost:4444/wd/hub/status
       register: result
-      until: result | json_query('value.message') == "Selenium Grid ready."
+      until: result.stdout | from_json | json_query('value.message') == "Selenium Grid ready."
+      delay: 2
+      retries: 10
 
     - name: run Dealbot
       shell: |
