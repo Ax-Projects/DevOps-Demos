@@ -2,6 +2,6 @@ secret.tfvars
 main.tf.bak
 main.tf
 ansible_vars.yml
-inventory
+inventory*
 .terraform*
 terraform.tfstate*
