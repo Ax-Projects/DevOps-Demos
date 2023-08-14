@@ -42,6 +42,11 @@ pipeline {
         sh(script: "cd DealBot-Jenkins && terraform apply -input=false -auto-approve tfplan")
       }
     }
+    stage('Ansible Provisioning') {
+      steps{
+        sh 'ansible-playbook DealBot-Jenkins/deploy.yml'
+      }
+    }
     stage('terraform destroy') {
       steps {
         sh(script: "cd DealBot-Jenkins && terraform destroy -input=false -auto-approve -var-file=secret.tfvars")
