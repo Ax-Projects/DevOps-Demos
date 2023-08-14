@@ -88,10 +88,10 @@
       wait_for:
         timeout: 120
         delay: 2
+        attempts: 20
         command: curl http://localhost:4444/wd/hub/status
-        search_regex: "Selenium Grid ready."
       register: result
-      until: result.stdout | from_json | json_query('value.ready') == true
+      until: result | json_query('value.message') == "Selenium Grid ready."
 
     - name: run Dealbot
       shell: |
