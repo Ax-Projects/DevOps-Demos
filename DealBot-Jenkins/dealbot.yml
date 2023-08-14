@@ -1,6 +1,8 @@
 ---
 - name: Dealbot Deployment
-  hosts: all
+  vars_files:
+    - ansible_vars.yml
+  hosts: "{{ instance_ip }}"
   become: yes
   become_user: root
   tasks:

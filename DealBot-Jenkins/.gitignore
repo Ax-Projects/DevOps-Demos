@@ -3,3 +3,5 @@ main.tf.bak
 main.tf
 ansible_vars.yml
 inventory
+.terraform*
+terraform.tfstate*

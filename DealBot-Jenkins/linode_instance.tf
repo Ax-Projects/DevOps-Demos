@@ -31,9 +31,19 @@ resource "linode_instance" "terraform-example" {
     }
   }
 
-  provisioner "local-exec" {
-    command = "ansible-playbook -u ${var.ssh_username} -i '${self.ip_address},' -e 'ansible_python_interpreter=/usr/bin/python3' --private-key ${var.ssh_private_key} dealbot.yml"
-  }
+  # provisioner "local-exec" {
+  #   command = "ansible-playbook -u ${var.ssh_username} -i '${self.ip_address},' -e 'ansible_python_interpreter=/usr/bin/python3' --private-key ${var.ssh_private_key} dealbot.yml"
+  # }
+}
+
+resource "local_file" "inventory_file" {
+  content  = <<-EOT
+  ${linode_instance.terraform-example.label} ansible_host=${linode_instance.terraform-example.ip_address} ansible_ssh_private_key_file=${var.ssh_private_key} ansible_ssh_user=${var.ssh_username}
+
+  [linode_instances]
+  ${linode_instance.terraform-example.label}
+  EOT
+  filename = "${path.module}/inventory.ini"
 }
 
 resource "local_file" "ansible_vars" {
