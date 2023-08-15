@@ -30,10 +30,6 @@ resource "linode_instance" "terraform-example" {
       private_key = file(var.ssh_private_key)
     }
   }
-
-  # provisioner "local-exec" {
-  #   command = "ansible-playbook -u ${var.ssh_username} -i '${self.ip_address},' -e 'ansible_python_interpreter=/usr/bin/python3' --private-key ${var.ssh_private_key} dealbot.yml"
-  # }
 }
 
 resource "local_file" "inventory_file" {
